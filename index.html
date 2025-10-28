@@ -65,11 +65,9 @@
     }
 
     function rebuildFullscreenGUI() {
-      if (isFullscreen()) {
-        fullscreenButton.style.backgroundImage = "url('TemplateData/fullscreen-button-in.png')";
-      } else {
-        fullscreenButton.style.backgroundImage = "url('TemplateData/fullscreen-button-out.png')";
-      }
+      fullscreenButton.style.backgroundImage = isFullscreen()
+        ? "url('TemplateData/fullscreen-button-in.png')"
+        : "url('TemplateData/fullscreen-button-out.png')";
     }
 
     function unityShowBanner(msg, type) {
@@ -114,15 +112,32 @@
       matchWebGLToCanvasSize: true
     };
 
-    // Mobile DPI scaling
+    // Mobile DPI scaling with orientation handling
     function resizeCanvas() {
       const dpr = window.devicePixelRatio || 1;
-      const maxDPR = 1.5; // prevent extremely high pixel density on mobile
-      canvas.width = canvas.clientWidth * Math.min(dpr, maxDPR);
-      canvas.height = canvas.clientHeight * Math.min(dpr, maxDPR);
+      const maxDPR = 1.5;
+      const containerWidth = window.innerWidth;
+      const containerHeight = window.innerHeight;
+
+      // Maintain aspect ratio if needed (optional)
+      const aspectRatio = 16 / 9; // adjust to your game's aspect ratio
+      let width = containerWidth;
+      let height = containerHeight;
+
+      if (containerWidth / containerHeight > aspectRatio) {
+        width = containerHeight * aspectRatio;
+      } else {
+        height = containerWidth / aspectRatio;
+      }
+
+      canvas.style.width = width + 'px';
+      canvas.style.height = height + 'px';
+      canvas.width = width * Math.min(dpr, maxDPR);
+      canvas.height = height * Math.min(dpr, maxDPR);
     }
 
     window.addEventListener('resize', resizeCanvas);
+    window.addEventListener('orientationchange', resizeCanvas);
     resizeCanvas();
 
     // Hide fullscreen button on mobile
