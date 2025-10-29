@@ -112,29 +112,18 @@
       matchWebGLToCanvasSize: true
     };
 
-    // Mobile DPI scaling with orientation handling
     function resizeCanvas() {
-      const dpr = window.devicePixelRatio || 1;
-      const maxDPR = 1.5;
-      const containerWidth = window.innerWidth;
-      const containerHeight = window.innerHeight;
+  const dpr = window.devicePixelRatio || 1;
+  const maxDPR = 1.5;
+  const width = window.innerWidth;
+  const height = window.innerHeight;
 
-      // Maintain aspect ratio if needed (optional)
-      const aspectRatio = 16 / 9; // adjust to your game's aspect ratio
-      let width = containerWidth;
-      let height = containerHeight;
+  canvas.style.width = width + 'px';
+  canvas.style.height = height + 'px';
+  canvas.width = width * Math.min(dpr, maxDPR);
+  canvas.height = height * Math.min(dpr, maxDPR);
+}
 
-      if (containerWidth / containerHeight > aspectRatio) {
-        width = containerHeight * aspectRatio;
-      } else {
-        height = containerWidth / aspectRatio;
-      }
-
-      canvas.style.width = width + 'px';
-      canvas.style.height = height + 'px';
-      canvas.width = width * Math.min(dpr, maxDPR);
-      canvas.height = height * Math.min(dpr, maxDPR);
-    }
 
     window.addEventListener('resize', resizeCanvas);
     window.addEventListener('orientationchange', resizeCanvas);
